@@ -7,7 +7,24 @@
 @implementation LSHTTPStubURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
-    return [@[ @"http", @"https" ] containsObject:request.URL.scheme];
+    BOOL isHttpOrHttpsRequest = [@[ @"http", @"https" ] containsObject:request.URL.scheme];
+
+    return isHttpOrHttpsRequest && [self requestShouldBeStubbed:request];
+}
+
++ (BOOL)requestShouldBeStubbed:(NSURLRequest *)request {
+    if ([LSNocilla sharedInstance].isAllowUnexpectedRequestsEnabled) {
+        NSArray* requests = [LSNocilla sharedInstance].stubbedRequests;
+        for(LSStubRequest *someStubbedRequest in requests) {
+            if ([someStubbedRequest matchesRequest:request]) {
+                return YES;
+            }
+        }
+
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {

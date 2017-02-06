@@ -13,6 +13,7 @@ extern NSString * const LSUnexpectedRequest;
 
 @property (nonatomic, strong, readonly) NSArray *stubbedRequests;
 @property (nonatomic, assign, readonly, getter = isStarted) BOOL started;
+@property (nonatomic, assign, getter = isAllowUnexpectedRequestsEnabled) BOOL allowUnexpectedRequestsEnabled;
 
 - (void)start;
 - (void)stop;
